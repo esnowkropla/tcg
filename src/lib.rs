@@ -6,3 +6,6 @@ pub mod manager;
 pub mod state;
 
 //Game Objects: Players, Cards, Zones
+
+pub use config::Config;
+pub use manager::GameManager;

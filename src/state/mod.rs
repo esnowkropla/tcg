@@ -7,56 +7,41 @@ mod cards;
 mod zones;
 mod players;
 
-pub use self::cards::Card;
-pub use self::zones::{Zone, Buffer};
+pub use self::cards::{Card, Cards};
+pub use self::zones::Zone;
 pub use self::players::Player;
 
-pub struct GameState<'a> {
-    pub cards: Buffer,
-
-    //Zones
-    pub stack: Zone<'a>,
-    pub deck: Zone<'a>,
-    /* pub field: Zone<'a>,
-    pub discard: Zone<'a>,
-    pub hand: Zone<'a>,
-    pub removed: Zone<'a>,*/
+#[derive(Debug)]
+pub struct GameState {
+    pub cards: Cards,
 }
 
-impl<'a> GameState<'a> {
+impl GameState {
     pub fn new(config: &Config) -> GameState {
-        let mut state = GameState {
-            cards: Buffer::new(),
-            stack: Zone::new_neutral(),
-            deck: Zone::new_owned(),
-        };
+        let mut state = GameState { cards: Cards::new() };
         state.push_deck(&config.deck_a, Player::A);
         state.push_deck(&config.deck_b, Player::B);
 
         return state;
     }
 
-    fn push_deck(
-        &mut self,
-        deck: &HashMap<u64, u8>,
-        player: Player,
-    ) -> Result<usize, &'static str> {
-        let mut i = 0;
+    fn push_deck(&mut self, deck: &HashMap<u64, u8>, player: Player) -> () {
         for (card, &num) in deck.iter() {
             for _ in 0..num {
-                let len = self.cards.len()?;
+                let len = self.cards.len();
                 let card = Card {
-                    id: len,
+                    id: len as u64,
                     which: *card,
+                    location: Zone::None,
                     owner: player,
                 };
-                self.cards.push(card);
-                //self.deck[player].push(self.cards.get(self.cards.len()));
-                i += 1;
+                self.cards.push(Zone::Deck(player, None), card);
             }
         }
-        return Ok(i);
     }
 
-    pub fn update(&mut self, other: &GameState, action: &Action) {}
+    pub fn update(&mut self, other: &GameState, action: &Action) {
+        println!("{:?}", other);
+        println!("{:?}", action);
+    }
 }

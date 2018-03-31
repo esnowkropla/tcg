@@ -2,13 +2,14 @@ use super::state::GameState;
 use super::action::Action;
 use super::config::Config;
 
-pub struct GameManager<'a> {
-    a: GameState<'a>,
-    b: GameState<'a>,
-    current: *mut GameState<'a>,
+#[derive(Debug)]
+pub struct GameManager {
+    a: GameState,
+    b: GameState,
+    current: *mut GameState,
 }
 
-impl<'a> GameManager<'a> {
+impl GameManager {
     pub fn init(config: &Config) -> GameManager {
         let mut g = GameManager {
             a: GameState::new(config),

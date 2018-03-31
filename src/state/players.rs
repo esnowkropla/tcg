@@ -1,5 +1,6 @@
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Player {
-    A = 0,
+    None = 0,
+    A,
     B,
 }
